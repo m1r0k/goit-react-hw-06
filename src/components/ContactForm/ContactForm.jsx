@@ -72,7 +72,7 @@ export default function ContactForm() {
             type="tel"
             name="number"
             id={elementId + "-number"}
-            placeholder="123-45-67"
+            placeholder="xxx-xx-xx"
           />
           <ErrorMessage
             className={css.error}

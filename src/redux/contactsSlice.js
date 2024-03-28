@@ -11,21 +11,21 @@ const slice = createSlice({
       reducer(state, action) {
         state.items.push(action.payload);
       },
+      prepare(contactInfo) {
+        return {
+          payload: {
+            id: nanoid(),
+            ...contactInfo,
+          },
+        };
+      },
     },
-    prepare(contactInfo) {
-      return {
-        payload: {
-          id: nanoid(),
-          ...contactInfo,
-        },
-      };
+    deleteContact(state, action) {
+      state.items = state.items.filter((item) => item.id !== action.payload);
     },
-  },
-  deleteContact(state, action) {
-    state.items = state.items.filter((item) => item.id !== action.payload);
-  },
-  clearError(state) {
-    state.error = null;
+    clearError(state) {
+      state.error = null;
+    },
   },
 });
 
