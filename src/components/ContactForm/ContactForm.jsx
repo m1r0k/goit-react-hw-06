@@ -3,7 +3,7 @@ import { useId } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { addContact, clearError, selectError } from "../../redux/contactsSlice";
+import { addContact, selectContacts } from "../../redux/contactsSlice";
 import { Toaster } from "react-hot-toast";
 import ErrorToast from "../Toast/ErrorToast";
 import SuccessToast from "../Toast/SuccessToast";
@@ -22,19 +22,23 @@ const contactSchema = Yup.object().shape({
 export default function ContactForm() {
   const elementId = useId();
   const dispatch = useDispatch();
-  const error = useSelector(selectError);
+  const contacts = useSelector(selectContacts);
 
   const handlerSubmit = (values, action) => {
+    if (
+      contacts.find(
+        (contact) =>
+          contact.name.toLowerCase() === values.name.toLowerCase() ||
+          contact.number === values.number
+      )
+    ) {
+      action.resetForm();
+      return ErrorToast("Contacts alredy in list");
+    }
     dispatch(addContact(values));
     action.resetForm();
-  };
-
-  if (error) {
-    ErrorToast(error);
-    dispatch(clearError());
-  } else {
     SuccessToast("Contact added successfully!");
-  }
+  };
 
   return (
     <Formik
